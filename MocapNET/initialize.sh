@@ -93,7 +93,7 @@ else
   #Only ask if we can answer
   #_____________________________
   if [ "$ASK_QUESTIONS" -eq "0" ]; then
-   answer="Y"
+   answer="N"
    else
    read answer
   fi 

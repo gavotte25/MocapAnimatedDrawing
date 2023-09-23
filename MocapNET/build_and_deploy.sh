@@ -8,13 +8,14 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 cd ..
-REPOSITORY=`pwd`
+cd SharedVolume/
+SHAREDVOL=`pwd`
 
 cd "$DIR"
 
 NAME="mocapnet"
 dockerfile_pth="$DIR"
-mount_pth="$REPOSITORY"
+mount_pth="$SHAREDVOL"
 
 # update tensorflow image
 docker pull tensorflow/tensorflow:latest-gpu
@@ -29,8 +30,9 @@ docker run -d \
 	--gpus all \
 	--shm-size 8G \
 	-it \
-	--name $NAME-container \
-	-v $mount_pth:/home/user/workspace \
+	-p 1024:1024 \
+	--name $NAME \
+	-v $mount_pth:/home/user/workspace/SharedVolume \
 	$NAME
 
 
@@ -38,7 +40,7 @@ docker ps -a
 
 OUR_DOCKER_ID=`docker ps -a | grep mocapnet | cut -f1 -d' '`
 echo "Our docker ID is : $OUR_DOCKER_ID"
-echo "Attaching it using : docker attach $OUD_DOCKER_ID"
+echo "Attaching it using : docker attach $OUR_DOCKER_ID"
 docker attach $OUR_DOCKER_ID
 
 exit 0

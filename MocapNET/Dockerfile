@@ -42,9 +42,8 @@ RUN \
 		&& mkdir /home/${user_name}/workspace/ \
         && chown -R user:user /home/${user_name}/workspace
 
+WORKDIR /home/${user_name}/workspace/
 
+COPY . /home/${user_name}/workspace/MocapNET/
+RUN cd /home/${user_name}/workspace/MocapNET && ./initialize.sh --collab
 USER ${user_name} 
-WORKDIR /home/${user_name}/
- 
-RUN cd /home/${user_name}/workspace && git clone https://github.com/FORTH-ModelBasedTracker/MocapNET && cd MocapNET && ./initialize.sh --collab
-
