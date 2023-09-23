@@ -39,11 +39,13 @@ RUN \
 		&& useradd -m -s /usr/bin/bash -u ${user_id} -G sudo ${user_name} \
 		&& echo "${user_name}:${user_psw}" | chpasswd \
 		&& chown -R ${user_name}:${user_name} /home/${user_name}/ \
-		&& mkdir /home/${user_name}/workspace/ \
-        && chown -R user:user /home/${user_name}/workspace
+		&& mkdir /home/${user_name}/workspace/
 
 WORKDIR /home/${user_name}/workspace/
 
 COPY . /home/${user_name}/workspace/MocapNET/
 RUN cd /home/${user_name}/workspace/MocapNET && ./initialize.sh --collab
-USER ${user_name} 
+RUN chown -R user:user /home/${user_name}/workspace
+RUN pip install Flask
+USER ${user_name}
+CMD cd /home/${user_name}/workspace/MocapNET && python app.py
