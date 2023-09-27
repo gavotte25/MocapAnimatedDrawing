@@ -21,8 +21,6 @@ mount_pth="$SHAREDVOL"
 docker run -d \
 	-it \
 	-p 1025:1025 \
-	-p 8080:8080 \
-	-p 8081:8081 \
 	--name $NAME \
 	-v $mount_pth:/SharedVolume \
 	$NAME \
