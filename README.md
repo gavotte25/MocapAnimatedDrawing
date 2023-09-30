@@ -2,6 +2,9 @@
 Current tensorflow version is not compatible with CUDA 12
 https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/101
 
+If build docker on M1 and encounter "/lib64/ld-linux-x86-64.so.2: No such file or directory error", use this 
+docker run --platform linux/x86_64 <image>
+
 ## Upper Limbs
 LeftShoulder    lshoulder
 RightShoulder   rshoulder

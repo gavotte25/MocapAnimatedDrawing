@@ -20,7 +20,7 @@ const fileHandler = (file, name, type) => {
     let img = document.createElement("img");
     img.src = reader.result;
     imageContainer.appendChild(img);
-    imageContainer.innerHTML += `<figcaption>${name}</figcaption><input type="submit">`;
+    imageContainer.innerHTML += `<figcaption>${name}</figcaption><input type="submit" onclick="submitPhoto()">`;
     imageDisplay.appendChild(imageContainer);
   };
 };
@@ -81,4 +81,22 @@ container.addEventListener(
 
 window.onload = () => {
   error.innerText = "";
+};
+
+const submitPhoto = async () => {
+  const API_URL = "http://localhost:1025";
+  let photo = document.getElementById("upload-button").files[0];
+  let formData = new FormData();
+  formData.append("file", photo);
+  let response = await fetch(API_URL, {
+    method: "POST", 
+    body: formData
+  });
+  // if (response.status >= 400) {
+  //     errorText = await response.text();
+  //     alert(errorText);
+  //     return;
+  // }
+  text = await response.text();
+  alert(text);
 };
