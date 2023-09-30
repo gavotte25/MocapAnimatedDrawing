@@ -14,6 +14,7 @@ mount_pth="$SHAREDVOL"
 
 docker pull ubuntu:18.04
 docker build \
+	--platform linux/x86_64 \
 	-t $NAME \
 	$dockerfile_pth \
 	--build-arg user_id=$UID
@@ -23,8 +24,7 @@ docker run -d \
 	-p 1025:1025 \
 	--name $NAME \
 	-v $mount_pth:/SharedVolume \
-	$NAME \
-	sleep infinity
+	$NAME
 
 docker ps -a
 

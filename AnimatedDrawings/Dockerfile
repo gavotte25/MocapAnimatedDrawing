@@ -17,6 +17,6 @@ SHELL ["conda", "run", "-n", "animated_drawings", "/bin/bash", "-c"]
 COPY . /AnimatedDrawings
 RUN cd AnimatedDrawings \
     && pip install -e .
-RUN python3 -m pip install PyOpenGL_accelerate
 WORKDIR /AnimatedDrawings
 ENTRYPOINT ["conda", "run", "-n", "animated_drawings"]
+CMD ["python", "app.py"]
