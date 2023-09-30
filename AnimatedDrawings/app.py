@@ -2,16 +2,30 @@ import os
 from flask import Flask, flash, request, redirect, url_for
 from flask_cors import CORS
 from animated_drawings import render
+from examples.image_to_annotations import image_to_annotations
 
-UPLOAD_FOLDER = '../SharedVolume'
+ANNOTATION_FOLDER = '../SharedVolume/Annotation'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 CORS(app)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['ANNOTATION_FOLDER'] = ANNOTATION_FOLDER
+TORCH_SERVE_BASE_URL = 'http://172.18.0.3:8080'
 
 @app.route('/', methods=['POST'])
-def upload_file():
+def create_anotation():
+    response_text, code = upload_file(request, app.config['ANNOTATION_FOLDER'])
+    print(code)
+    if code == 200:
+        image_to_annotations(response_text, ANNOTATION_FOLDER, TORCH_SERVE_BASE_URL)
+        return response_text, 200
+    else:
+        return response_text, code
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def upload_file(request, dest):
     if 'file' not in request.files:
         return 'No file part', 400
     file = request.files['file']
@@ -19,12 +33,12 @@ def upload_file():
         return 'No selected file', 400
     if file and allowed_file(file.filename):
         filename = 'input' + os.path.splitext(file.filename)[1]
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return 'OK', 200
+        filename = os.path.join(dest, filename)
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        file.save(filename)
+        return filename, 200
     return 'Unsupported file', 400
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=1025)

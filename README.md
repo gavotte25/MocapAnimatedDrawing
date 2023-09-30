@@ -5,6 +5,8 @@ https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/101
 If build docker on M1 and encounter "/lib64/ld-linux-x86-64.so.2: No such file or directory error", use this 
 docker run --platform linux/x86_64 <image>
 
+docker run -d -it --net mocapani --ip 172.18.0.2 -p 1025:1025 --name animated_drawings -v /home/gavotte25/MocapAnimatedDrawing/SharedVolume:/SharedVolume animated_drawings sleep infinity
+
 ## Upper Limbs
 LeftShoulder    lshoulder
 RightShoulder   rshoulder

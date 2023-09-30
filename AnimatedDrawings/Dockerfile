@@ -15,8 +15,7 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 RUN conda create --name animated_drawings python=3.8.13 -y 
 SHELL ["conda", "run", "-n", "animated_drawings", "/bin/bash", "-c"]
 COPY . /AnimatedDrawings
-RUN cd AnimatedDrawings \
-    && pip install -e .
+RUN cd AnimatedDrawings && pip install -e .
 WORKDIR /AnimatedDrawings
 ENTRYPOINT ["conda", "run", "-n", "animated_drawings"]
 CMD ["python", "app.py"]
