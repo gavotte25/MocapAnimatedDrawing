@@ -12,11 +12,11 @@ NAME="animated_drawings"
 dockerfile_pth="$DIR"
 mount_pth="$SHAREDVOL"
 
-# docker pull ubuntu:18.04
-# docker build \
-# 	-t $NAME \
-# 	$dockerfile_pth \
-# 	--build-arg user_id=$UID
+docker pull ubuntu:18.04
+docker build \
+	-t $NAME \
+	$dockerfile_pth \
+	--build-arg user_id=$UID
 
 docker run -d \
 	-it \
