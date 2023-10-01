@@ -4,7 +4,7 @@
 
 import argparse
 import base64
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import json
 import os
 import sys
@@ -45,7 +45,7 @@ def post_cfg():
     output, message = process(request)
     if output:
         print(output)
-    return render_template('submit.html', code=output, message=message)
+    return render_template('submit.html', message=message)
 
 
 def process(request):
@@ -72,9 +72,9 @@ def process(request):
     try:
         write_cfg(os.path.join(cfg_path), jsondata)
     except Exception as e:
-        return None, f"Error saving down file to `{cfg_path}: {e}`"
+        return None, f"Error saving adjusted annotations: {e}"
 
-    return new_cfg, f"Successfully saved config to `{cfg_path}`"
+    return new_cfg, f"Successfully updated annotations!"
 
 
 if __name__ == "__main__":

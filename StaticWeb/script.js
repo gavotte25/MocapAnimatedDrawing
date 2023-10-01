@@ -4,6 +4,7 @@ let fileName = document.getElementById("file-name");
 let container = document.querySelector(".container");
 let error = document.getElementById("error");
 let imageDisplay = document.getElementById("image-display");
+let processBtn = document.getElementById("process-btn");
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -20,7 +21,10 @@ const fileHandler = (file, name, type) => {
     let img = document.createElement("img");
     img.src = reader.result;
     imageContainer.appendChild(img);
-    imageContainer.innerHTML += `<figcaption>${name}</figcaption><input type="submit" onclick="submitPhoto()">`;
+    imageContainer.innerHTML += `<figcaption>${name}</figcaption>
+      <div class="row justify-content-center mt-2">
+        <button id="annotate-btn" type="submit" onclick="submitPhoto()" class="btn btn-primary">Get annotations</button>
+      </div>`;
     imageDisplay.appendChild(imageContainer);
   };
 };
@@ -28,6 +32,7 @@ const fileHandler = (file, name, type) => {
 //Upload Button
 uploadButton.addEventListener("change", () => {
   imageDisplay.innerHTML = "";
+  processBtn.classList.add("d-none");
   Array.from(uploadButton.files).forEach((file) => {
     fileHandler(file, file.name, file.type);
   });
@@ -84,7 +89,10 @@ window.onload = () => {
 };
 
 const submitPhoto = async () => {
-  const API_URL = "http://localhost:1025";
+  let annotateBtn = document.getElementById("annotate-btn");
+  annotateBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Loading...`;
+  annotateBtn.classList.add("disabled");
+  const API_URL = "http://localhost:1025/create_annotation";
   let photo = document.getElementById("upload-button").files[0];
   let formData = new FormData();
   formData.append("file", photo);
@@ -92,11 +100,14 @@ const submitPhoto = async () => {
     method: "POST", 
     body: formData
   });
-  // if (response.status >= 400) {
-  //     errorText = await response.text();
-  //     alert(errorText);
-  //     return;
-  // }
-  text = await response.text();
-  alert(text);
+  if (response.status >= 400) {
+    errorText = await response.text();
+    annotateBtn.innerHTML = "Get annotations"
+    annotateBtn.classList.remove("disabled");
+    alert(errorText);
+    return;
+  } else {
+    imageDisplay.innerHTML = `<iframe id="fix-anno" src="http://127.0.0.1:5050/" frameborder="0"></iframe>`;
+    processBtn.classList.remove("d-none");
+  }
 };

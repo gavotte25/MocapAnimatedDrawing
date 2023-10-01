@@ -12,10 +12,9 @@ CORS(app)
 app.config['ANNOTATION_FOLDER'] = ANNOTATION_FOLDER
 TORCH_SERVE_BASE_URL = 'http://172.18.0.3:8080'
 
-@app.route('/', methods=['POST'])
-def create_anotation():
+@app.route('/create_annotation', methods=['POST'])
+def create_annotation():
     response_text, code = upload_file(request, app.config['ANNOTATION_FOLDER'])
-    print(code)
     if code == 200:
         image_to_annotations(response_text, ANNOTATION_FOLDER, TORCH_SERVE_BASE_URL)
         return response_text, 200
