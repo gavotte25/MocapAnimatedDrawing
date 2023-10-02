@@ -7,14 +7,14 @@
 body {
   background-color: #f5f8ff;
 }
-.container {
+#image-container {
   background-color: #ffffff;
   min-width: 37.5em;
   padding: 1.87em;
   position: absolute;
   transform: translateX(-50%);
   left: 50%;
-  top: 1em;
+  top: 5em;
   box-shadow: 0 1.25em 3.43em rgba(0, 0, 0, 0.08);
   border-radius: 0.5em;
 }

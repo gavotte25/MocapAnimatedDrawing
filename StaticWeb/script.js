@@ -5,6 +5,9 @@ let container = document.querySelector(".container");
 let error = document.getElementById("error");
 let imageDisplay = document.getElementById("image-display");
 let processBtn = document.getElementById("process-btn");
+let motionSelect = document.getElementById("motion-select");
+const CREATE_ANNOTATION_URL = "http://localhost:1025/create_annotation";
+const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -86,17 +89,27 @@ container.addEventListener(
 
 window.onload = () => {
   error.innerText = "";
+  loadMotionList();
 };
+
+const loadMotionList = async () => {
+  let response = await fetch(GET_MOTION_LIST_URL);
+  let json = await response.json();
+  var items = "<option selected>Select motion...</option>"
+  for (let motion of json.motions) {
+    items += `<option value=${motion}>${motion}</option>`
+  }
+  motionSelect.innerHTML = items;
+}
 
 const submitPhoto = async () => {
   let annotateBtn = document.getElementById("annotate-btn");
   annotateBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Loading...`;
   annotateBtn.classList.add("disabled");
-  const API_URL = "http://localhost:1025/create_annotation";
   let photo = document.getElementById("upload-button").files[0];
   let formData = new FormData();
   formData.append("file", photo);
-  let response = await fetch(API_URL, {
+  let response = await fetch(CREATE_ANNOTATION_URL, {
     method: "POST", 
     body: formData
   });

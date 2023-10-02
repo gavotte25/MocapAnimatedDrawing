@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-
-    <div class="container">
-      <select name="motion-select" class="custom-select custom-select-md mb-4">
-        <option selected>Large Custom Select Menu</option>
-        <option value="volvo">Volvo</option>
-        <option value="fiat">Fiat</option>
-        <option value="audi">Audi</option>
+    <div class="d-flex flex-row-reverse container px-0  mt-3">
+      <a type="submit" href="extract-motion.html" class="btn btn-success ml-3" data-toggle="tooltip" title="Extract motion from video">Add</a>
+      <select id="motion-select" class="custom-select custom-select-md w-auto">
+        <option selected>Select motion... </option>
       </select>
+    </div>
+
+    <div id="image-container" class="container">
       <input type="file" id="upload-button" accept="image/*" />
       <label for="upload-button" class="row justify-content-center">
         <a type="submit" class="btn btn-primary">Choose Or Drop Photos</a>
