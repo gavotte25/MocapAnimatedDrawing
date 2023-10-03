@@ -3,22 +3,32 @@ from flask import Flask, flash, request, redirect, url_for, jsonify
 from flask_cors import CORS
 from animated_drawings import render
 from examples.image_to_annotations import image_to_annotations
+from examples.annotations_to_animation import annotations_to_animation
 
 ANNOTATION_FOLDER = '../SharedVolume/Annotation'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 MOTION_FOLDER = 'examples/config/motion'
 
+BUILTIN_RETARGET_CONFIG = {
+    'jumping_jacks': 'examples/config/retarget/cmu1_pfp.yaml',
+    'dab': 'examples/config/retarget/fair1_ppf.yaml',
+    'jumping': 'examples/config/retarget/fair1_ppf.yaml',
+    'wave_hello': 'examples/config/retarget/fair1_ppf.yaml',
+    'zombie': 'examples/config/retarget/fair1_ppf.yaml',
+    'rokoko': 'examples/config/retarget/mixamo_fff.yaml'
+}
+
 app = Flask(__name__)
 CORS(app)
 TORCH_SERVE_BASE_URL = 'http://172.18.0.3:8080'
 
-@app.route('/create_annotation', methods=['POST'])
+@app.route('/create-annotation', methods=['POST'])
 def create_annotation():
     response_text, code = upload_file(request, ANNOTATION_FOLDER)
     print(code)
     if code == 200:
         image_to_annotations(response_text, ANNOTATION_FOLDER, TORCH_SERVE_BASE_URL)
-        return response_text, 200
+        return 'OK', 200
     else:
         return response_text, code
 
@@ -31,6 +41,14 @@ def get_motions():
             motions.append(motion)
     else:
         return jsonify(motions=motions)
+
+@app.route('/process-img', methods=['POST'])
+def process_image():
+    if 'motion' not in request.form:
+        return 'Invalid request', 400
+    motion = request.form['motion']
+    annotations_to_animation(ANNOTATION_FOLDER, get_motion_config(motion), get_retarget_config(motion))
+    return 'OK', 200
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -49,6 +67,14 @@ def upload_file(request, dest):
         file.save(filename)
         return filename, 200
     return 'Unsupported file', 400
+
+def get_retarget_config(motion):
+    if motion in BUILTIN_RETARGET_CONFIG:
+        return BUILTIN_RETARGET_CONFIG[motion]
+    return 'examples/config/retarget/mocap_retarget.yaml'
+
+def get_motion_config(motion):
+    return 'examples/config/motion/{}.yaml'.format(motion)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=1025)

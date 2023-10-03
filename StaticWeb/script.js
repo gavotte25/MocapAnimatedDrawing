@@ -6,8 +6,9 @@ let error = document.getElementById("error");
 let imageDisplay = document.getElementById("image-display");
 let processBtn = document.getElementById("process-btn");
 let motionSelect = document.getElementById("motion-select");
-const CREATE_ANNOTATION_URL = "http://localhost:1025/create_annotation";
+const CREATE_ANNOTATION_URL = "http://localhost:1025/create-annotation";
 const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
+const PROCESS_IMG_URL = "http://localhost:1025/process-img"
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -124,3 +125,21 @@ const submitPhoto = async () => {
     processBtn.classList.remove("d-none");
   }
 };
+
+const processPhoto = async () => {
+  processBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Processing...`;
+  processBtn.classList.add("disabled");
+  let formData = new FormData();
+  formData.append("motion", motionSelect.value);
+  let response = await fetch(PROCESS_IMG_URL, {
+    method: "POST",
+    body: formData
+  })
+  processBtn.innerHTML = "Process"
+  processBtn.classList.remove("disabled");
+  if (response.status >= 400) {
+    alert(await response.text())
+  } else {
+    alert('Success')
+  }
+}

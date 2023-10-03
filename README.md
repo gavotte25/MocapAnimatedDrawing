@@ -7,6 +7,8 @@ docker run --platform linux/x86_64 <image>
 
 docker run -d -it --net mocapani --ip 172.18.0.2 -p 1025:1025 --name animated_drawings -v /home/gavotte25/MocapAnimatedDrawing/SharedVolume:/SharedVolume animated_drawings sleep infinity
 
+python fix_annotations.py ../../SharedVolume/Annotation
+
 ## Upper Limbs
 LeftShoulder    lshoulder
 RightShoulder   rshoulder
