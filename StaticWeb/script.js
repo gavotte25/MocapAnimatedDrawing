@@ -6,9 +6,11 @@ let error = document.getElementById("error");
 let imageDisplay = document.getElementById("image-display");
 let processBtn = document.getElementById("process-btn");
 let motionSelect = document.getElementById("motion-select");
+let newWindow;
 const CREATE_ANNOTATION_URL = "http://localhost:1025/create-annotation";
 const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
 const PROCESS_IMG_URL = "http://localhost:1025/process-img"
+const CHECK_EXISTS_ANNOTATION = "http://localhost:1025"
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -91,12 +93,13 @@ container.addEventListener(
 window.onload = () => {
   error.innerText = "";
   loadMotionList();
+  skipAnnoIfHas();
 };
 
 const loadMotionList = async () => {
   let response = await fetch(GET_MOTION_LIST_URL);
   let json = await response.json();
-  var items = "<option selected>Select motion...</option>"
+  var items = "<option value='unset' selected>Select motion...</option>"
   for (let motion of json.motions) {
     items += `<option value=${motion}>${motion}</option>`
   }
@@ -127,6 +130,10 @@ const submitPhoto = async () => {
 };
 
 const processPhoto = async () => {
+  if (motionSelect.value == 'unset') {
+    alert("A motion must been chosen before processing.");
+    return;
+  }
   processBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Processing...`;
   processBtn.classList.add("disabled");
   let formData = new FormData();
@@ -140,6 +147,28 @@ const processPhoto = async () => {
   if (response.status >= 400) {
     alert(await response.text())
   } else {
-    alert('Success')
+    showResult();
+  }
+}
+
+const showResult = () => {
+  let tmp = new Image();
+  let gifPath = "../SharedVolume/Annotation/video.gif";
+  tmp.onload = function() {
+    if (newWindow) {
+      newWindow.close();
+    }
+    newWindow = window.open("", "", `width=${this.width + 20},height=${this.height + 20}`);
+    newWindow.document.write(`<img src='${gifPath}'>`);
+  }
+  tmp.src = gifPath;
+}
+
+const skipAnnoIfHas = async () => {
+  let response = await fetch(CHECK_EXISTS_ANNOTATION);
+  let json = await response.json();
+  if (json.exists) {
+    imageDisplay.innerHTML = `<iframe id="fix-anno" src="http://127.0.0.1:5050/" frameborder="0"></iframe>`;
+    processBtn.classList.remove("d-none");
   }
 }

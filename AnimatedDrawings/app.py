@@ -15,7 +15,7 @@ BUILTIN_RETARGET_CONFIG = {
     'jumping': 'examples/config/retarget/fair1_ppf.yaml',
     'wave_hello': 'examples/config/retarget/fair1_ppf.yaml',
     'zombie': 'examples/config/retarget/fair1_ppf.yaml',
-    'rokoko': 'examples/config/retarget/mixamo_fff.yaml'
+    'jesse_dance': 'examples/config/retarget/mixamo_fff.yaml'
 }
 
 app = Flask(__name__)
@@ -31,6 +31,10 @@ def create_annotation():
         return 'OK', 200
     else:
         return response_text, code
+
+@app.route('/')
+def check_existing_annotation():
+    return jsonify(exists=os.path.isfile(ANNOTATION_FOLDER + '/char_cfg.yaml')), 200
 
 @app.route('/motions', methods=['GET'])
 def get_motions():

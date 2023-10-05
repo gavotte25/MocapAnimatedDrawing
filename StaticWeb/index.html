@@ -14,14 +14,14 @@
     <div class="d-flex flex-row-reverse container px-0  mt-3">
       <a type="submit" href="extract-motion.html" class="btn btn-success ml-3" data-toggle="tooltip" title="Extract motion from video">Add</a>
       <select id="motion-select" class="custom-select custom-select-md w-auto">
-        <option selected>Select motion... </option>
+        <option value='unset' selected>Select motion... </option>
       </select>
     </div>
 
     <div id="image-container" class="container">
       <input type="file" id="upload-button" accept="image/*" />
       <label for="upload-button" class="row justify-content-center">
-        <a type="submit" class="btn btn-primary">Choose Or Drop Photos</a>
+        <a type="submit" class="btn btn-primary">Choose Or Drop Photo</a>
       </label>
       <div class="row justify-content-center">
         <button id="process-btn" onclick="processPhoto()" class="btn btn-success d-none m-3">Process</button>
