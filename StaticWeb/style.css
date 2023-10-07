@@ -7,7 +7,7 @@
 body {
   background-color: #f5f8ff;
 }
-#image-container {
+#display-container {
   background-color: #ffffff;
   min-width: 37.5em;
   padding: 1.87em;
@@ -34,7 +34,7 @@ input[type="file"] {
   margin: 0 auto 1em auto;
   cursor: pointer;
 } */
-#image-display {
+#display {
   position: relative;
   width: 90%;
   margin: 0 auto;
@@ -43,18 +43,15 @@ input[type="file"] {
   gap: 1.25em;
   flex-wrap: wrap;
 }
-/* #image-display figure {
-  width: 45%;
-} */
-#image-display img {
+#display img {
   width: 100%;
 }
-#image-display figcaption {
+#display figcaption {
   font-size: 0.8em;
   text-align: center;
   color: #5a5861;
 }
-#image-display input {
+#display input {
   display: block;
   position: relative;
   text-align: center;

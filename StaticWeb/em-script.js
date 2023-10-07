@@ -1,44 +1,43 @@
 let uploadButton = document.getElementById("upload-button");
-let chosenImage = document.getElementById("chosen-image");
-let fileName = document.getElementById("file-name");
 let container = document.querySelector(".container");
 let error = document.getElementById("error");
-let imageDisplay = document.getElementById("image-display");
-let processBtn = document.getElementById("process-btn");
-let motionSelect = document.getElementById("motion-select");
-let newWindow;
-const CREATE_ANNOTATION_URL = "http://localhost:1025/create-annotation";
-const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
-const PROCESS_IMG_URL = "http://localhost:1025/process-img"
-const CHECK_EXISTS_ANNOTATION = "http://localhost:1025"
+let display = document.getElementById("display");
+let submitBtn = document.getElementById("submit-btn");
+let motionNameInput = document.getElementById("name-input");
+let checkStatusInterval;
+
+const EXTRACT_MOTION_URL = "http://localhost:1025/extract-motion";
+const GET_STATUS_URL = "http://localhost:1025/status"
 
 const fileHandler = (file, name, type) => {
-  if (type.split("/")[0] !== "image") {
+  if (type.split("/")[0] !== "video") {
     //File Type Error
-    error.innerText = "Please upload an image file";
+    error.innerText = "Please upload an video file";
     return false;
   }
   error.innerText = "";
   let reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onloadend = () => {
-    //image and file name
-    let imageContainer = document.createElement("figure");
-    let img = document.createElement("img");
-    img.src = reader.result;
-    imageContainer.appendChild(img);
-    imageContainer.innerHTML += `<figcaption>${name}</figcaption>
-      <div class="row justify-content-center mt-2">
-        <button id="annotate-btn" type="submit" onclick="submitPhoto()" class="btn btn-primary">Get annotations</button>
-      </div>`;
-    imageDisplay.appendChild(imageContainer);
+    let blobURL = URL.createObjectURL(file);
+    let videoContainer = document.createElement("video");
+    videoContainer.setAttribute("controls","");
+    videoContainer.setAttribute("style","width:320px");
+    videoContainer.classList.add("mt-3");
+    videoContainer.innerHTML += `
+      <source src="${blobURL}" type="video/mp4">
+      Your browser does not support the video tag.`;
+    display.appendChild(videoContainer);
+    submitBtn.classList.remove("d-none");
+    motionNameInput.classList.remove("d-none");
   };
 };
 
 //Upload Button
 uploadButton.addEventListener("change", () => {
-  imageDisplay.innerHTML = "";
-  processBtn.classList.add("d-none");
+  display.innerHTML = "";
+  submitBtn.classList.add("d-none");
+  motionNameInput.classList.add("d-none");
   Array.from(uploadButton.files).forEach((file) => {
     fileHandler(file, file.name, file.type);
   });
@@ -82,7 +81,7 @@ container.addEventListener(
     container.classList.remove("active");
     let draggedData = e.dataTransfer;
     let files = draggedData.files;
-    imageDisplay.innerHTML = "";
+    display.innerHTML = "";
     Array.from(files).forEach((file) => {
       fileHandler(file, file.name, file.type);
     });
@@ -92,62 +91,50 @@ container.addEventListener(
 
 window.onload = () => {
   error.innerText = "";
+  startCheckStatus();
 };
 
-const submitPhoto = async () => {
-  let annotateBtn = document.getElementById("annotate-btn");
-  annotateBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Loading...`;
-  annotateBtn.classList.add("disabled");
-  let photo = document.getElementById("upload-button").files[0];
+const submitVideo = () => {
+  submitBtn.classList.add("disabled");
   let formData = new FormData();
-  formData.append("file", photo);
-  let response = await fetch(CREATE_ANNOTATION_URL, {
+  let video = uploadButton.files[0];
+  let name = motionNameInput.value;
+  formData.append("file", video);
+  formData.append("name", name)
+  fetch(EXTRACT_MOTION_URL, {
     method: "POST", 
     body: formData
   });
-  if (response.status >= 400) {
-    errorText = await response.text();
-    annotateBtn.innerHTML = "Get annotations"
-    annotateBtn.classList.remove("disabled");
-    alert(errorText);
-    return;
-  } else {
-    imageDisplay.innerHTML = `<iframe id="fix-anno" src="http://127.0.0.1:5050/" frameborder="0"></iframe>`;
-    processBtn.classList.remove("d-none");
-  }
+  alert("Server is extracting motion in background. User will be informed once it's done.");
+  submitBtn.classList.remove("disabled");
+  window.location.replace("index.html");
 };
 
-const processVideo = async () => {
-  if (motionSelect.value == 'unset') {
-    alert("A motion must been chosen before processing.");
-    return;
-  }
-  processBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Processing...`;
-  processBtn.classList.add("disabled");
-  let formData = new FormData();
-  formData.append("motion", motionSelect.value);
-  let response = await fetch(PROCESS_IMG_URL, {
-    method: "POST",
-    body: formData
-  })
-  processBtn.innerHTML = "Process"
-  processBtn.classList.remove("disabled");
-  if (response.status >= 400) {
-    alert(await response.text())
-  } else {
-    showResult();
+const checkServerStatus = async () => {
+  let response = await fetch(GET_STATUS_URL);
+  let json = await response.json();
+  switch(json.status) {
+    case "EXTRACT_FAIL":
+      alert("Extract motion failed!");
+      break;
+    case "EXTRACT_SUCCESS":
+      alert("Extract motion success!");
+      break;
+    case "IDLE":
+      stopCheckStatus();
+      break;
   }
 }
 
-const showResult = () => {
-  let tmp = new Image();
-  let gifPath = "../SharedVolume/Annotation/video.gif";
-  tmp.onload = function() {
-    if (newWindow) {
-      newWindow.close();
-    }
-    newWindow = window.open("", "", `width=${this.width + 20},height=${this.height + 20}`);
-    newWindow.document.write(`<img src='${gifPath}'>`);
+const startCheckStatus = () => {
+  stopCheckStatus();
+  checkServerStatus();
+  checkStatusInterval = setInterval(function() { checkServerStatus()}, 60000);
+}
+
+const stopCheckStatus = () => {
+  if (checkStatusInterval) {
+    clearInterval(checkStatusInterval);
   }
-  tmp.src = gifPath;
+  checkStatusInterval = null;
 }

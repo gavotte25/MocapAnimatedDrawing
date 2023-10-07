@@ -12,23 +12,30 @@
   </head>
   <body>
     <div class="d-flex flex-row-reverse container px-0  mt-3">
-      <a type="submit" href="extract-motion.html" class="btn btn-success ml-3" data-toggle="tooltip" title="Extract motion from video">Add</a>
-      <select id="motion-select" class="custom-select custom-select-md w-auto">
-        <option value='unset' selected>Select motion... </option>
-      </select>
+      <a type="submit" href="index.html" class="btn btn-success ml-3">Back</a>
     </div>
 
-    <div id="image-container" class="container">
-      <input type="file" id="upload-button" accept="video/*" />
-      <label for="upload-button" class="row justify-content-center">
-        <a type="submit" class="btn btn-primary">Choose Or Drop Video</a>
-      </label>
-      <div class="row justify-content-center">
-        <button id="process-btn" onclick="processVideo()" class="btn btn-success d-none m-3">Process</button>
-      </div>
-      <div id="error"></div>
-      <div id="image-display"></div>      
+    <div id="display-container" class="container">
+      <form id="extract-form" onsubmit="submitVideo()">
+        <input type="file" id="upload-button" accept="video/*" required/>
+        <label for="upload-button" class="row justify-content-center">
+          <a class="btn btn-primary">Choose Or Drop Video</a>
+        </label>
+        <div class="row justify-content-center">
+          <input id="name-input" name="name" class="form-control mt-3 d-none text-center" pattern="[a-zA-Z0-9_]{3,20}" type="text" style="width:320px" placeholder="Motion name"  data-toggle="tooltip" data-placement="top" title="3 to 20 characters. Space or special characters (except '_') are not allowed." required>
+        </div>
+        <div class="row justify-content-center">
+          <button id="submit-btn" class="btn btn-success d-none m-3" type="submit">Submit</button>
+        </div>
+        <div id="error"></div>
+        <div id="display"></div>      
+      </form>
     </div>
     <script src="em-script.js"></script>
+    <script>
+      $('#extract-form').submit(function(e){
+          e.preventDefault();
+      });
+      </script>
   </body>
 </html>
