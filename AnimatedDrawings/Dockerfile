@@ -18,4 +18,4 @@ COPY . /AnimatedDrawings
 RUN cd AnimatedDrawings && pip install -e .
 WORKDIR /AnimatedDrawings
 ENTRYPOINT ["conda", "run", "-n", "animated_drawings"]
-CMD ["python", "app.py"]
+CMD ["sh", "start_servers.sh"]

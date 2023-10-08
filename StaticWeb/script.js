@@ -128,7 +128,7 @@ const submitPhoto = async () => {
     alert(errorText);
     return;
   } else {
-    display.innerHTML = `<iframe id="fix-anno" src="http://127.0.0.1:5050/" frameborder="0"></iframe>`;
+    display.innerHTML = `<iframe id="fix-anno" src="http://localhost:1026/" frameborder="0"></iframe>`;
     processBtn.classList.remove("d-none");
   }
 };
@@ -172,7 +172,7 @@ const skipAnnoIfHas = async () => {
   let response = await fetch(CHECK_EXISTS_ANNOTATION);
   let json = await response.json();
   if (json.exists) {
-    display.innerHTML = `<iframe id="fix-anno" src="http://127.0.0.1:5050/" frameborder="0"></iframe>`;
+    display.innerHTML = `<iframe id="fix-anno" src="http://localhost:1026/" frameborder="0"></iframe>`;
     processBtn.classList.remove("d-none");
   }
 }

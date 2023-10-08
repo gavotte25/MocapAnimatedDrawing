@@ -80,13 +80,14 @@ def process(request):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('char_folder', type=str, help="the location of the character bundle")
-    parser.add_argument('--port', type=int, default=5050, help="the port the tool launches on")
+    parser.add_argument('--port', type=int, default=1026, help="the port the tool launches on")
     args = parser.parse_args()
 
     char_folder = args.char_folder
     cfg_path = os.path.join(char_folder, "char_cfg.yaml")
 
-    if not os.path.isfile(cfg_path):
-        print(f"[Error] File not found. Expected config file at: {cfg_path}")
-        sys.exit(1)
-    app.run(port=args.port, debug=False)
+    # if not os.path.isfile(cfg_path):
+    #     print(f"[Error] File not found. Expected config file at: {cfg_path}")
+    #     sys.exit(1)
+    # app.run(host="0.0.0.0", port=1026 debug=False)
+    app.run(host="0.0.0.0", port=1026, debug=False)

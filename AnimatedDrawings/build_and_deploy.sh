@@ -24,6 +24,7 @@ docker run -d \
 	--net mocapani \
 	--ip 172.18.0.2 \
 	-p 1025:1025 \
+	-p 1026:1026 \
 	--name $NAME \
 	-v $mount_pth:/SharedVolume \
 	$NAME
@@ -32,8 +33,5 @@ docker ps -a
 
 OUR_DOCKER_ID=`docker ps -a | grep $NAME | cut -f1 -d' '`
 echo "Our docker ID is : $OUR_DOCKER_ID"
-# echo "Attaching it using : docker attach $OUR_DOCKER_ID"
-# docker attach $OUR_DOCKER_ID
-# docker container exec -it $OUR_DOCKER_ID /bin/bash (can delete this)
 
 exit 0
