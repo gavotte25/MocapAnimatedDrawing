@@ -21,18 +21,18 @@ mount_pth="$SHAREDVOL"
 docker pull tensorflow/tensorflow:latest-gpu
 
 # build and run tensorflow
-docker build \
-	-t $NAME \
-	$dockerfile_pth \
-	--build-arg user_id=$UID
+docker build -t $NAME $dockerfile_pth
 
-docker run -d \
+docker run \
+	--net mocapani \
+	--ip 172.18.0.4 \
+	-d \
 	--gpus all \
 	--shm-size 8G \
 	-it \
 	-p 1024:1024 \
 	--name $NAME \
-	-v $mount_pth:/home/user/workspace/SharedVolume \
+	-v $mount_pth:/SharedVolume \
 	$NAME
 
 
@@ -40,7 +40,5 @@ docker ps -a
 
 OUR_DOCKER_ID=`docker ps -a | grep $NAME | cut -f1 -d' '`
 echo "Our docker ID is : $OUR_DOCKER_ID"
-echo "Attaching it using : docker attach $OUR_DOCKER_ID"
-docker attach $OUR_DOCKER_ID
 
 exit 0

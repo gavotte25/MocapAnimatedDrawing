@@ -13,6 +13,7 @@ const CREATE_ANNOTATION_URL = "http://localhost:1025/create-annotation";
 const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
 const PROCESS_IMG_URL = "http://localhost:1025/process-img"
 const CHECK_EXISTS_ANNOTATION = "http://localhost:1025"
+const GET_STATUS_URL = "http://localhost:1025/status"
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -184,6 +185,7 @@ const checkServerStatus = async () => {
       alert("Extract motion failed!");
       break;
     case "EXTRACT_SUCCESS":
+      loadMotionList();
       alert("Extract motion success!");
       break;
     case "IDLE":
@@ -195,7 +197,7 @@ const checkServerStatus = async () => {
 const startCheckStatus = () => {
   stopCheckStatus();
   checkServerStatus();
-  checkStatusInterval = setInterval(function() { checkServerStatus()}, 60000);
+  checkStatusInterval = setInterval(function() { checkServerStatus()}, 30000);
 }
 
 const stopCheckStatus = () => {

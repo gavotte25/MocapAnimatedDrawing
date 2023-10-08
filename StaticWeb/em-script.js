@@ -129,7 +129,7 @@ const checkServerStatus = async () => {
 const startCheckStatus = () => {
   stopCheckStatus();
   checkServerStatus();
-  checkStatusInterval = setInterval(function() { checkServerStatus()}, 60000);
+  checkStatusInterval = setInterval(function() { checkServerStatus()}, 30000);
 }
 
 const stopCheckStatus = () => {
