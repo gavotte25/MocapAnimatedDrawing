@@ -9,11 +9,21 @@ let motionSelect = document.getElementById("motion-select");
 let newWindow;
 let checkStatusInterval;
 
-const CREATE_ANNOTATION_URL = "http://localhost:1025/create-annotation";
-const GET_MOTION_LIST_URL = "http://localhost:1025/motions";
-const PROCESS_IMG_URL = "http://localhost:1025/process-img"
-const CHECK_EXISTS_ANNOTATION = "http://localhost:1025"
-const GET_STATUS_URL = "http://localhost:1025/status"
+const CURRENT_URL = window.location.href;
+let host = "localhost";
+if (CURRENT_URL.startsWith("http")) {
+  let startIndex = CURRENT_URL.indexOf("://") + 3;
+  let endIndex = CURRENT_URL.indexOf("/",8);
+  if (startIndex >= 0 && endIndex > startIndex) {
+    host = CURRENT_URL.substring(startIndex, endIndex);
+  } 
+}
+
+const CREATE_ANNOTATION_URL = `http://${host}:1025/create-annotation`;
+const GET_MOTION_LIST_URL = `http:///${host}:1025/motions`;
+const PROCESS_IMG_URL = `http:///${host}:1025/process-img`
+const CHECK_EXISTS_ANNOTATION = `http:///${host}:1025`
+const GET_STATUS_URL = `http:///${host}:1025/status`
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "image") {
@@ -128,7 +138,7 @@ const submitPhoto = async () => {
     alert(errorText);
     return;
   } else {
-    display.innerHTML = `<iframe id="fix-anno" src="http://localhost:1026/" frameborder="0"></iframe>`;
+    display.innerHTML = `<iframe id="fix-anno" src="http://${host}:1026/" frameborder="0"></iframe>`;
     processBtn.classList.remove("d-none");
   }
 };
@@ -172,7 +182,7 @@ const skipAnnoIfHas = async () => {
   let response = await fetch(CHECK_EXISTS_ANNOTATION);
   let json = await response.json();
   if (json.exists) {
-    display.innerHTML = `<iframe id="fix-anno" src="http://localhost:1026/" frameborder="0"></iframe>`;
+    display.innerHTML = `<iframe id="fix-anno" src="http://${host}:1026/" frameborder="0"></iframe>`;
     processBtn.classList.remove("d-none");
   }
 }

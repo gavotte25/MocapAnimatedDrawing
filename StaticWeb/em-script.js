@@ -6,8 +6,18 @@ let submitBtn = document.getElementById("submit-btn");
 let motionNameInput = document.getElementById("name-input");
 let checkStatusInterval;
 
-const EXTRACT_MOTION_URL = "http://localhost:1025/extract-motion";
-const GET_STATUS_URL = "http://localhost:1025/status"
+const CURRENT_URL = window.location.href;
+let host = "localhost";
+if (CURRENT_URL.startsWith("http")) {
+  let startIndex = CURRENT_URL.indexOf("://") + 3;
+  let endIndex = CURRENT_URL.indexOf("/",8);
+  if (startIndex >= 0 && endIndex > startIndex) {
+    host = CURRENT_URL.substring(startIndex, endIndex);
+  } 
+}
+
+const EXTRACT_MOTION_URL = `http://${host}:1025/extract-motion`;
+const GET_STATUS_URL = `http://${host}:1025/status`;
 
 const fileHandler = (file, name, type) => {
   if (type.split("/")[0] !== "video") {
