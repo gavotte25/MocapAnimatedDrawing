@@ -173,6 +173,9 @@ const showResult = () => {
       newWindow.close();
     }
     newWindow = window.open("", "", `width=${this.width + 20},height=${this.height + 20}`);
+    if (!newWindow) {
+      alert("Please enable popup and retry, otherwise, check the result at page hostname/preview.html.");
+    }
     newWindow.document.write(`<img src='${gifPath}'>`);
   }
   tmp.src = gifPath;
