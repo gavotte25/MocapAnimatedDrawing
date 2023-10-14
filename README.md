@@ -1,6 +1,6 @@
 # MocapAnimatedDrawing
 
-This is an application that utilizes 2 projects AnimatedDrawings and MocapNET that can animate a 2D drawing human form character given a sample motion video in end-to-end manner.
+This is an application that utilizes 2 projects <a href="https://github.com/facebookresearch/AnimatedDrawings">AnimatedDrawings</a> and <a href="https://github.com/FORTH-ModelBasedTracker/MocapNET">MocapNET</a> that can animate a 2D drawing human form character given a sample motion video in end-to-end manner.
 
 This project also provides Docker image for AnimatedDrawings project.
 
