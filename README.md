@@ -1,44 +1,40 @@
 # MocapAnimatedDrawing
-Current tensorflow version is not compatible with CUDA 12
-https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/101
 
-If build docker on M1 and encounter "/lib64/ld-linux-x86-64.so.2: No such file or directory error", use this 
-docker run --platform linux/x86_64 <image>
+This is an application that utilizes 2 projects AnimatedDrawings and MocapNET that can animate a 2D drawing human form character given a sample motion video in end-to-end manner.
 
-docker run -d -it --net mocapani --ip 172.18.0.2 -p 1025:1025 --name animated_drawings -v /home/gavotte25/MocapAnimatedDrawing/SharedVolume:/SharedVolume animated_drawings sleep infinity
+This project also provides Docker image for AnimatedDrawings project.
 
-python fix_annotations.py ../../SharedVolume/Annotation
+## How to build it:
+````bash
+git clone https://github.com/gavotte25/MocapAnimatedDrawing.git
+cd MocapAnimatedDrawing
+sh build_and_deploy.sh
+````
+After building completed, check if this server is ready. 
+````bash
+curl http://localhost:8080/ping
 
-## Upper Limbs
-LeftShoulder    lshoulder
-RightShoulder   rshoulder
+# should return:
+# {
+#   "status": "Healthy"
+# }
+````
 
-LeftElbow       lelbow
-RightElbow      relbow
+## How to use it:
 
-LeftWrist       lhand
-RightWrist      rhand
+Interact with the app via MocapAnimatedDrawing/StaticWeb/index.html.
+Note: Because all Docker containers are using SharedVolume folder as a common bind mount and the web pages have reference to that folder, the html files only work when they are placed inside the procject.
 
-LFingers        metacarpal3.l
-RFingers        metacarpal3.r
+If there is any issue related to calling the APIs while all the containers are still running, try restarting the containers and wait for awhile.
 
-## Lower Limbs
+Annotation and GIF output of AnimatedDrawings are stored in folder SharedVolume/Annotation
+BVH output from MocapNET can be found in folder SharedVolume/Temp
 
-LeftHip         lhip
-RightHip        rhip
+Output files will be overwritten everytime calling APIs
 
-LeftKnee        lknee
-RightKnee       rknee
-
-LeftAnkle       lfoot
-RightAnkle      rfoot
-
-LeftToe         LeftToeBase
-RightToe        RightToeBase
-
-## Trunk
-
-Hips            hip
-Chest           abdomen
-Chest2          chest
-Head            Head
+## Example:
+Input:
+![Character Input](maruko.png)
+[![Motion Input](video-thumbnail.png)](http://ammar.gr/mocapnet/shuffle.webm)
+Output:
+![Output](shuffle.gif)

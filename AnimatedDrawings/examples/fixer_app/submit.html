@@ -1,4 +1,14 @@
-<h3 style="text-align: center">{{ message }}</h1>
+<h3 style="text-align: center">{{ message }}</h3>
 <script>
-    setTimeout(function() { location.replace("http://127.0.0.1:5050"); }, 100);
+    const CURRENT_URL = window.location.href;
+    let host = "localhost";
+    if (CURRENT_URL.startsWith("http")) {
+        let startIndex = CURRENT_URL.indexOf("://") + 3;
+        let tmp = CURRENT_URL.replaceAll(":","/");
+        let endIndex = tmp.indexOf("/",8);
+        if (startIndex >= 0 && endIndex > startIndex) {
+            host = CURRENT_URL.substring(startIndex, endIndex);
+        } 
+    }
+    setTimeout(function() { location.replace( `http://${host}:1026`); }, 100);
 </script>

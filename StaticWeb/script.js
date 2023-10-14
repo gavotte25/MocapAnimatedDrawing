@@ -13,9 +13,10 @@ const CURRENT_URL = window.location.href;
 let host = "localhost";
 if (CURRENT_URL.startsWith("http")) {
   let startIndex = CURRENT_URL.indexOf("://") + 3;
-  let endIndex = CURRENT_URL.indexOf("/",8);
+  let tmp = CURRENT_URL.replaceAll(":","/");
+  let endIndex = tmp.indexOf("/",8);
   if (startIndex >= 0 && endIndex > startIndex) {
-    host = CURRENT_URL.substring(startIndex, endIndex);
+      host = CURRENT_URL.substring(startIndex, endIndex);
   } 
 }
 
