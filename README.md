@@ -5,6 +5,17 @@ This is an application that utilizes 2 projects <a href="https://github.com/face
 This project also provides Docker image for AnimatedDrawings project.
 ## How to build it:
 Recommended OS (not compulsory): Ubuntu 20.04.6 LTS.
+
+This project is tested with GPU NVIDA GeForce RXT 2060. 
+In case you don't have GPU on your machine, considering to adjust this file based on your machine MocapAnimatedDrawing/blob/main/MocapNET/initialize.sh or you can try changing line 235: 
+
+````
+# from this
+answer="Y"
+# to this
+answer="N"
+````
+
 If using Window, commands must be executed in WSL Ubuntu environment, otherwise, It won't work.
 ````bash
 git clone https://github.com/gavotte25/MocapAnimatedDrawing.git
