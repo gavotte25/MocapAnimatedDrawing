@@ -15,6 +15,7 @@ answer="Y"
 # to this
 answer="N"
 ````
+Also, delete option "--gpus all" at line 30 in file MocapAnimatedDrawing/MocapNET/build_and_deploy.sh
 
 If using Window, commands must be executed in WSL Ubuntu environment, otherwise, It won't work.
 ````bash
