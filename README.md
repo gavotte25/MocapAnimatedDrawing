@@ -3,8 +3,9 @@
 This is an application that utilizes 2 projects <a href="https://github.com/facebookresearch/AnimatedDrawings">AnimatedDrawings</a> and <a href="https://github.com/FORTH-ModelBasedTracker/MocapNET">MocapNET</a> that can animate a 2D drawing human form character given a sample motion video in end-to-end manner.
 
 This project also provides Docker image for AnimatedDrawings project.
-
 ## How to build it:
+Recommended OS (not compulsory): Ubuntu 20.04.6 LTS.
+If using Window, commands must be executed in WSL Ubuntu environment, otherwise, It won't work.
 ````bash
 git clone https://github.com/gavotte25/MocapAnimatedDrawing.git
 cd MocapAnimatedDrawing
